@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name='author' content='jinjiaxing'>
     <meta name="keywords" content="study canvas"/>
-    <meta name="description" content="cavnas lesson2"/>
+    <meta name="description" content="cavnas lesson3"/>
     <title>Title</title>
     <style type="text/css">
         canvas {
@@ -13,26 +13,31 @@
         }
     </style>
 </head>
-<body onload="draw();">
+<body onload="drawPath();">
 <canvas id="tutorial" width="150" height="150"></canvas>
 </body>
 <script>
-    //
-    function draw() {
+    /**
+     * 绘制路径
+     * 练习:beginPath moveTo lineTo stroke fill函数
+     */
+    function drawPath() {
         var canvas = document.getElementById('tutorial');
         if (canvas.getContext) {
             var ctx = canvas.getContext('2d');
 
-            // 绘制简单正方形
-            ctx.fillStyle = 'rgb(0,0,0)';
-            // 起点总是在canvas元素的左上角开始也就是0,0
-            ctx.fillRect(25, 25, 100, 100);
+            ctx.beginPath();
+            // 移动画笔点
+            ctx.moveTo(15, 75);
+            // 横线
+            ctx.lineTo(120, 75);
+            ctx.stroke();
+            ctx.lineTo(120, 65);
+            ctx.lineTo(130, 75);
+            ctx.lineTo(120, 85);
+            ctx.lineTo(120, 75);
+            ctx.fill();
 
-            // 中间区域弄成透明,也就是清除70*70大小的正方形
-            ctx.clearRect(40, 40, 70, 70);
-
-            // 绘制60*60的边框
-            ctx.strokeRect(45, 45, 60, 60);
         }
     }
 </script>

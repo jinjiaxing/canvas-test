@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name='author' content='jinjiaxing'>
+    <title>Title</title>
+    <style type="text/css">
+        canvas { border: 1px solid black; }
+    </style>
+</head>
+<body onload="draw();">
+<canvas id="tutorial" width="150" height="150"></canvas>
+</body>
+<script>
+    function draw(){
+        var canvas = document.getElementById('tutorial');
+        if (canvas.getContext){
+            var ctx = canvas.getContext('2d');
+
+            // 绘制简单正方形
+            ctx.fillStyle = 'rgb(200,0,0)';
+            // 起点总是在canvas元素的左上角开始也就是0,0
+            ctx.fillRect(5,5,50,50);
+
+            ctx.fillStyle = 'rgba(0, 0, 200, 0.5)';
+            ctx.fillRect(15,15,50,50);
+        }
+    }
+</script>
+</html>

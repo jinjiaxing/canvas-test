@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name='author' content='jinjiaxing'>
+    <title>Title</title>
+    <style type="text/css">
+        canvas {
+            border: 1px solid black;
+            background-color: rgba(169, 169, 169, 0.05);
+        }
+    </style>
+</head>
+<body onload="draw();">
+<canvas id="tutorial" width="150" height="150"></canvas>
+</body>
+<script>
+    function draw(){
+        var canvas = document.getElementById('tutorial');
+        if (canvas.getContext){
+            var ctx = canvas.getContext('2d');
+
+            // 绘制简单正方形
+            ctx.fillStyle = 'rgb(0,0,0)';
+            // 起点总是在canvas元素的左上角开始也就是0,0
+            ctx.fillRect(25,25,100,100);
+
+            // 中间区域弄成透明
+            ctx.clearRect(40,40,70,70);
+
+            // 绘制小边框
+            ctx.strokeRect(45,45,60,60);
+        }
+    }
+</script>
+</html>

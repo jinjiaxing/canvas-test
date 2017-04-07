@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name='author' content='jinjiaxing'>
+    <meta name="keywords" content="study canvas"/>
+    <meta name="description" content="cavnas lesson5"/>
+    <title>Title</title>
+    <style type="text/css">
+        canvas {
+            border: 1px solid black;
+            background-color: rgba(169, 169, 169, 0.05);
+        }
+    </style>
+</head>
+<body onload="init();">
+<div id='readout'></div>
+<canvas id="tutorial" width="600" height="300"></canvas>
+</body>
+<script>
+
+    var canvas = document.querySelector('#tutorial'),
+            readout = document.querySelector('#readout'),
+            context = canvas.getContext('2d');
+
+    function init() {
+        // 鼠标移动事件handler
+        canvas.onmousemove = function(e) {
+            var loc = getWindowToCanvas(canvas,e.clientX,e.clientY);
+
+            context.clearRect(0,0,canvas.width,canvas.height);
+            drawGuidelines(loc.x, loc.y);
+            updateReadout(loc.x, loc.y);
+
+        }
+    }
+
+    /**
+     * 根据鼠标当前位置,获取在canvas中的位置
+     * @param canvas canvas对象
+     * @param x 鼠标坐标点x位置
+     * @param y 鼠标坐标点y位置
+     */
+    function getWindowToCanvas(canvas,x,y) {
+        var canvasBox = canvas.getBoundingClientRect();
+
+        return {
+            x: x - canvasBox.left * (canvas.width / canvasBox.width),
+            y: y - canvasBox.top * (canvas.height / canvasBox.height)
+        }
+    }
+
+    function drawGuidelines(x, y) {
+        context.strokeStyle = 'rgba(0,0,230,0.8)';
+        //context.lineWidth = 0.5;
+        drawVerticalLine(x);
+        drawHorizontalLine(y);
+    }
+
+    function drawHorizontalLine (y) {
+        context.beginPath();
+        context.moveTo(0,y + 0.5);
+        context.lineTo(context.canvas.width, y + 0.5);
+        context.stroke();
+    }
+
+    function drawVerticalLine (x) {
+        context.beginPath();
+        context.moveTo(x + 0.5, 0);
+        context.lineTo(x + 0.5, context.canvas.height);
+        context.stroke();
+    }
+
+    function updateReadout(x, y) {
+        readout.innerHTML = '(' + x.toFixed(0) + ', ' + y.toFixed(0) + ')';
+    }
+</script>
+</html>

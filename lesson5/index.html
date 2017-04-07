@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name='author' content='jinjiaxing'>
+    <meta name="keywords" content="study canvas"/>
+    <meta name="description" content="cavnas lesson5"/>
+    <title>Title</title>
+    <style type="text/css">
+        canvas {
+            border: 1px solid black;
+            background-color: rgba(169, 169, 169, 0.05);
+        }
+    </style>
+</head>
+<body onload="drawPath();">
+<canvas id="tutorial" width="600" height="300"></canvas>
+</body>
+<script>
+    /**
+     * 绘制文字
+     * 练习:fillText,strokeText函数
+     */
+    function drawPath() {
+        var canvas = document.getElementById('tutorial');
+        if (canvas.getContext) {
+            var ctx = canvas.getContext('2d');
+
+            ctx.font = '38px microsoft yahei';
+            ctx.fillStyle = 'cornflowerblue';
+            ctx.strokeStyle = 'blue';
+
+            ctx.fillText('Hello Jinjiaxing!', canvas.width / 2 - 150, canvas.height / 2 );
+            ctx.strokeText('Hello Jinjiaxing!', canvas.width / 2 - 150, canvas.height / 2 );
+        }
+    }
+</script>
+</html>

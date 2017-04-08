@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name='author' content='jinjiaxing'>
+    <meta name="keywords" content="study canvas"/>
+    <meta name="description" content="cavnas lesson7"/>
+    <title>Title</title>
+
+    <style type="text/css">
+        canvas {
+            border: 1px solid black;
+            background-color: rgba(169, 169, 169, 0.05);
+        }
+    </style>
+</head>
+<body onload="drawPath();">
+<div>
+    <label>坐标:</label>
+    <label id = 'canvasPos'></label>
+</div>
+<canvas id="canvas" width="600" height="300"></canvas>
+</body>
+<script>
+
+    // canvas坐标辅助函数
+    function windowTocanvas(canvas, x, y) {
+        var bbox = canvas.getBoundingClientRect();
+        return {
+            x: x - bbox.left * (canvas.width / bbox.width),
+            y: y - bbox.top * (canvas.height / bbox.height)
+        };
+    }
+
+    /**
+     * 画多个图形
+     * 练习:beginPath 和 clonePath
+     */
+    function drawPath() {
+        var canvas = document.getElementById('canvas');
+
+        canvas.onmousemove = function (e) {
+            var loc=windowTocanvas(canvas,event.clientX,event.clientY)
+            var x=parseInt(loc.x);
+            var y=parseInt(loc.y);
+            document.getElementById("canvasPos").innerHTML=x+','+y;
+        }
+
+        if (canvas.getContext) {
+            var ctx = canvas.getContext('2d');
+
+            ctx.lineWidth =2;
+            ctx.strokeStyle = '#005588';
+
+            for(var i=0;i<5;i++) {
+                ctx.beginPath();
+                ctx.arc(50+i*100,150,40,0,2*Math.PI*(i+1)/5);
+                ctx.closePath();
+                ctx.stroke();
+            }
+        }
+    }
+</script>
+</html>

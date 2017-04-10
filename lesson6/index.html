@@ -25,6 +25,9 @@
         var canvas = document.getElementById('canvas');
         if (canvas.getContext) {
             var ctx = canvas.getContext('2d');
+
+            drawGrid(ctx, 'lightgray', 10, 10);
+
             ctx.beginPath();
             ctx.moveTo(10,10);
             ctx.lineTo(110,110);
@@ -48,6 +51,36 @@
             ctx.fill();
 
         }
+    }
+
+    /**
+     * 绘制网格
+     * @param context
+     * @param color
+     * @param stepx
+     * @param stepy
+     */
+    function drawGrid(context, color, stepx, stepy) {
+        context.save()
+
+        context.strokeStyle = color;
+        context.lineWidth = 0.5;
+
+        for (var i = stepx + 0.5; i < context.canvas.width; i += stepx) {
+            context.beginPath();
+            context.moveTo(i, 0);
+            context.lineTo(i, context.canvas.height);
+            context.stroke();
+            context.closePath();
+        }
+        for (var i = stepy + 0.5; i < context.canvas.height; i += stepy) {
+            context.beginPath();
+            context.moveTo(0, i);
+            context.lineTo(context.canvas.width, i);
+            context.stroke();
+            context.closePath();
+        }
+        context.restore();
     }
 </script>
 </html>

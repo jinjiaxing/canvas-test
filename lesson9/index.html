@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name='author' content='jinjiaxing'>
+    <meta name="keywords" content="study canvas"/>
+    <meta name="description" content="cavnas lesson8"/>
+    <title>Title</title>
+
+    <style type="text/css">
+        canvas {
+            border: 1px solid black;
+            background-color: rgba(169, 169, 169, 0.05);
+        }
+    </style>
+</head>
+<body onload="render();">
+<div>
+    <label>坐标:</label>
+    <label id = 'canvasPos'></label>
+</div>
+<canvas id="canvas" width="600" height="300"></canvas>
+</body>
+<script>
+
+    // canvas坐标辅助函数
+    function windowTocanvas(canvas, x, y) {
+        var bbox = canvas.getBoundingClientRect();
+        return {
+            x: x - bbox.left * (canvas.width / bbox.width),
+            y: y - bbox.top * (canvas.height / bbox.height)
+        };
+    }
+
+    function render() {
+        var strat = Date.now();
+        requestAnimationFrame(render);
+
+
+        drawPath();
+    }
+
+    /**
+     * 贝塞尔曲线
+     * 练习:quadraticCurveTo
+     */
+    function drawPath() {
+        var canvas = document.getElementById('canvas');
+
+
+
+        canvas.onmousemove = function (e) {
+            var loc=windowTocanvas(canvas,event.clientX,event.clientY)
+            var x=parseInt(loc.x);
+            var y=parseInt(loc.y);
+            document.getElementById("canvasPos").innerHTML=x+','+y;
+        }
+
+        if (canvas.getContext) {
+            var ctx = canvas.getContext('2d');
+
+            ctx.clearRect(0,0,canvas.width,canvas.height);
+            drawGrid(ctx, 'lightgray', 10, 10);
+
+
+            ctx.save();
+
+            ctx.beginPath();
+            ctx.translate(71,68);
+
+            var scaleValue = Math.random()/10 + 0.9;
+//            if(scaleValue < 0.85) scaleValue = 0.85;
+
+            ctx.scale(scaleValue,scaleValue);
+
+            ctx.moveTo(75,40);
+            ctx.bezierCurveTo(75,37,70,25,50,25);
+            ctx.bezierCurveTo(20,25,20,62.5,20,62.5);
+            ctx.bezierCurveTo(20,80,40,102,75,120);
+            ctx.bezierCurveTo(110,102,130,80,130,62.5);
+            ctx.bezierCurveTo(130,62.5,130,25,100,25);
+            ctx.bezierCurveTo(85,25,75,37,75,40);
+            ctx.fillStyle='red';
+
+            ctx.fill();
+
+
+
+            ctx.restore();
+
+        }
+    }
+
+    function drawGrid(context, color, stepx, stepy) {
+        context.save()
+
+        context.strokeStyle = color;
+        context.lineWidth = 0.5;
+
+        for (var i = stepx + 0.5; i < context.canvas.width; i += stepx) {
+            context.beginPath();
+            context.moveTo(i, 0);
+            context.lineTo(i, context.canvas.height);
+            context.stroke();
+            context.closePath();
+        }
+        for (var i = stepy + 0.5; i < context.canvas.height; i += stepy) {
+            context.beginPath();
+            context.moveTo(0, i);
+            context.lineTo(context.canvas.width, i);
+            context.stroke();
+            context.closePath();
+        }
+        context.restore();
+    }
+</script>
+</html>

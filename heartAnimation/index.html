@@ -1,0 +1,237 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="referrer" content="no-referrer">
+    <meta name="format-detection" content="telephone=no">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <meta name="viewport" content="width=device-width,initial-scale=1,minimum-scale=1,maximum-scale=1,user-scalable=no">
+    <meta name='author' content='jinjiaxing'>
+    <meta name="keywords" content="study canvas"/>
+    <meta name="description" content="cavnas lesson8"/>
+    <title>Title</title>
+
+    <style type="text/css">
+        canvas {
+            border: 1px solid black;
+            background-color: rgba(169, 169, 169, 0.05);
+            margin: 0;
+            padding: 0;
+        }
+    </style>
+</head>
+<body onload="drawPath();">
+<div>
+    <label>坐标:</label>
+    <label id = 'canvasPos'></label>
+</div>
+<canvas id="canvas" width="375" height="667"></canvas>
+</body>
+<script>
+
+    var hearts = [];
+    var colors = ['rgba(32, 116, 242, 0.82)','rgba(237, 129, 9, 0.82)','rgba(237, 9, 15, 0.7)','rgba(9, 96, 237, 0.53)']
+
+    // canvas坐标辅助函数
+    function windowTocanvas(canvas, x, y) {
+        var bbox = canvas.getBoundingClientRect();
+        return {
+            x: x - bbox.left * (canvas.width / bbox.width),
+            y: y - bbox.top * (canvas.height / bbox.height)
+        };
+    }
+
+    // 绘制表格
+    function drawGrid(context, color, stepx, stepy) {
+        context.save()
+
+        context.strokeStyle = color;
+        context.lineWidth = 0.5;
+
+        for (var i = stepx + 0.5; i < context.canvas.width; i += stepx) {
+            context.beginPath();
+            context.moveTo(i, 0);
+            context.lineTo(i, context.canvas.height);
+            context.stroke();
+            context.closePath();
+        }
+        for (var i = stepy + 0.5; i < context.canvas.height; i += stepy) {
+            context.beginPath();
+            context.moveTo(0, i);
+            context.lineTo(context.canvas.width, i);
+            context.stroke();
+            context.closePath();
+        }
+        context.restore();
+    }
+
+    // 范围内的随机数
+    function randomNumBoth(Min,Max){
+        var Range = Max - Min;
+        var Rand = Math.random();
+        var num = Min + parseInt(Rand * Range); //四舍五入
+        return num;
+    }
+
+    function drawPath() {
+        var canvas = document.getElementById('canvas');
+
+        canvas.onmousemove = function (e) {
+            var loc=windowTocanvas(canvas,event.clientX,event.clientY)
+            var x=parseInt(loc.x);
+            var y=parseInt(loc.y);
+            document.getElementById("canvasPos").innerHTML=x+','+y;
+        }
+
+        if (canvas.getContext) {
+            var ctx = canvas.getContext('2d');
+
+            drawGrid(ctx, 'lightgray', 10, 10);
+
+            initHearts();
+            beginAnimate();
+        }
+    }
+
+    function beginAnimate() {
+        var canvas = document.getElementById('canvas');
+        var ctx = canvas.getContext('2d');
+        ctx.clearRect(0,0,canvas.width,canvas.height);
+        drawGrid(ctx, 'lightgray', 10, 10);
+
+        updateHeart();
+        drawHeartList();
+
+        requestAnimationFrame(beginAnimate);
+    }
+
+    // 初始化心形模型
+    function initHearts() {
+        var HeartLength = 20;
+        var canvas = document.getElementById('canvas');
+        var ctx = canvas.getContext('2d');
+
+
+        for(var i=0;i<HeartLength;i++) {
+            var heart = new Heart(ctx,randomNumBoth(100,200),randomNumBoth(canvas.height,canvas.height*2),7);
+
+            heart.fillcolor =colors[randomNumBoth(0,4)];
+            heart.rot = randomNumBoth(-30,30);
+            heart.speedy = randomNumBoth(3,4);
+            hearts.push(heart);
+        }
+    }
+
+    function drawHeartList() {
+        var canvas = document.getElementById('canvas');
+
+        for(var i=0;i<hearts.length;i++) {
+            var heart = hearts[i];
+
+            heart.draw();
+
+
+        }
+    }
+
+    function updateHeart() {
+        var canvas = document.getElementById('canvas');
+        var ctx = canvas.getContext('2d');
+        for(var i = 0; i<hearts.length; i++) {
+            var heart = hearts[i];
+
+
+
+            // 大小变化
+            if(heart.y >= canvas.height) {
+                heart.scale = 7;
+                heart.alpha = 1;
+            }
+            if(heart.scale > 13) {
+                heart.scale = 13;
+            }else{
+                heart.scale = heart.scale + 0.02;
+            }
+
+
+
+            if(heart.alpha < 0.5) {
+                heart.alpha = 0.5;
+            }else {
+                heart.alpha =  heart.alpha - 0.0005;
+            }
+
+            heart.y=  heart.y - heart.speedy;
+
+            // 如果出了上边界 则恢复到起点
+            if(heart.y < 0) {
+                heart.y=canvas.height+10;
+            }
+
+            console.log('heart.x =',heart.x );
+        }
+    }
+
+
+    /**
+     * Heart shape
+     * ctx:context对象
+     * x:起点x坐标
+     * y:起点y坐标
+     * scale:大小
+     * fillcolor:填充颜色
+     * strokecolor:描边颜色
+     */
+    var Heart = function(ctx,x,y,scale,speedx,speedy,fillcolor,strokecolor,alpha,rot){
+        this.ctx = ctx;
+        this.x = x ;
+        this.y = y;
+        this.speedx = speedx || 0 ;
+        this.speedy = speedy || 0;
+        this.scale= scale || 1;
+        this.fillcolor = fillcolor || 'red';
+        this.strokecolor = strokecolor || 'red';
+        this.alpha = alpha || 1;
+        this.rot = 0;
+    }
+
+    Heart.prototype.draw = function(){
+        var ctx = this.ctx;
+        var x = this.x + this.speedx;
+        var y = this.y +  this.speedy;
+        var scale = this.scale;
+        var fillcolor = this.fillcolor;
+        var strokecolor = this.strokecolor;
+        var rot = this.rot;
+
+        ctx.save();
+        ctx.translate(x,y);
+        ctx.rotate(rot/180*Math.PI);
+        // 等比例缩放
+        ctx.scale(scale,scale);
+        this.heartPath(ctx);
+        /*ctx.strokeStyle = "red"; ctx.lineWidth = "3px";*/
+        ctx.globalAlpha = this.alpha;
+        ctx.fillStyle = fillcolor;
+        ctx.shadowColor = "gray";
+        ctx.shadowOffsetX = 5;
+        ctx.shadowOffsetY = 5;
+        ctx.shadowBlur = 5; ctx.fill();
+        //ctx.stroke();
+        ctx.restore();
+    };
+
+    Heart.prototype.heartPath = function(ctx) {
+        ctx.beginPath();
+        ctx.arc(-1,0,1,Math.PI,0,false);
+        ctx.arc(1,0,1,Math.PI,0,false); //貝塞尔曲线画心
+        ctx.bezierCurveTo(1.9, 1.2, 0.6, 1.6, 0, 3.0);
+        ctx.bezierCurveTo( -0.6, 1.6,-1.9, 1.2,-2,0);
+        ctx.closePath();
+    }
+
+
+
+
+</script>
+</html>
